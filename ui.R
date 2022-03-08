@@ -113,6 +113,8 @@ conclusion_tab <- tabPanel(
 ui <- navbarPage(
   "General page title",
   intro_tab,
-  plot_tab,
+  plot1_tab,
+  plot2_tab,
+  plot3_tab,
   conclusion_tab
 )
