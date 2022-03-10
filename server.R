@@ -20,7 +20,7 @@ all_justice_not_in <- project_data %>% filter(JJOffenderType == 'Not Justice Inv
 HS_Diploma_nojustice <- project_data %>% filter(JJOffenderType == 'Not Justice Involved') %>% 
   filter(HSOutcome == 'HS Diploma') %>% count()
 
-prop_HSdiploma_nojustice <- HS_Diploma_nojustice / all_justice_not_in
+prop_HSdiploma_nojustice <- round((HS_Diploma_nojustice / all_justice_not_in), digits = 2)
 
 
 # Proportion of dropouts w/justice involvement
@@ -30,15 +30,8 @@ all_justice_in <- project_data %>% filter(JJOffenderType != 'Not Justice Involve
 dropouts_w_justice <- project_data %>% filter(JJOffenderType != 'Not Justice Involved') %>% 
   filter(HSOutcome == 'Dropout') %>% count()
 
-prop_dropouts_justice_in <- dropouts_w_justice / all_justice_in
+prop_dropouts_justice_in <- round((dropouts_w_justice / all_justice_in), digits = 2)
 
-
-# Percent Asians with a high school diploma
-# pct_hs_dip<-project_data %>% 
-#   group_by(DemographicValue) %>% 
-#   filter(HSOutcome == 'HS Diploma') %>%
-#   summarize(pct_inv = mean(Pct, na.rm = TRUE)) %>% 
-#   pull(DemographicValue == Asian)
 
 
 #Server function
