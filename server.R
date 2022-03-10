@@ -10,12 +10,51 @@ project_data<-read.csv("https://raw.githubusercontent.com/info-201b-wi22/explora
 
 #Chart 1 
 
-# Load chart 1 data.
+# A dodged bar chart showing the high school outcomes for each offender type
+# (justice-involved, not justice-involved, juvenile offender, status offender)
+avg_pct_offenders <- project_data %>%
+  filter(DemographicGroup == "All Students") %>% 
+  filter(DemographicValue == "All Students") %>% 
+  filter(CohortYearTTL > 2015) %>% 
+  rename("Percent_of_Cohort" = "Pct") %>% 
+  rename("Justice_Involvement" = "JJOffenderType")
 
-#Make chart 1.
 
-ggplotly(chart1)
-return(chart1)
+server <- function(input, output) {
+  
+  output$chart1 <- renderPlotly({
+    
+    # dataset for chart
+    chart1_plot <- avg_pct_offenders %>% 
+      filter(Justice_Involvement %in% input$user_justice_choice)
+    
+    # make plot
+    plot <- ggplot(data = chart1_plot) +
+      geom_col(
+        mapping = aes(x = Justice_Involvement, y = Percent_of_Cohort, fill = HSOutcome), position = "dodge"
+      ) + scale_y_continuous(breaks = seq(0, .83, .1)) + facet_wrap(~CohortYearTTL) +
+      labs(title = "High School Outcomes for Each Offender Type",
+           x = "Justice Involvement Type",
+           y = "Percent of Cohort",
+           color = "High School Outcomes")
+    
+    plotly_plot1 <- ggplotly(plot)
+    return(plotly_plot1)
+  })
+  
+  output$outcome <- renderText({
+    if(input$user_explain == 1){
+      return(" If a student does not have a graduation record or a GED record, 
+             they are considered to be a dropout.")
+    } else if (input$user_explain == 2) {
+      return(" If the student does not have a graduation record, 
+             the OSPI P210 and SBCTC Completion records are queried to determine if the student has completed a GED.")
+    } else {
+      return("OSPI P210 indicates the student graduated.")
+    }
+  })
+}
+
 
 # Chart 2 
 

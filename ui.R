@@ -14,32 +14,42 @@ intro_tab <- tabPanel(
 )
 
 #Chart1 Page
-Chart1 <- tabPanel(
-  "Chart 1",
+
+# small widges
+plot_sidebar <- sidebarPanel(
+  selectInput(
+    inputId = "user_justice_choice",
+    label = h3("Select an Offender Type"),
+    choices = avg_pct_offenders$Justice_Involvement,
+    selected = "Justice Involved",
+    multiple = TRUE),
   
-  #This is the sidebar.
+  radioButtons(
+    inputId = "user_explain",
+    label = h5("See the Metric explanation of High School Outcomes (HSOutcome):"),
+    choices = list("Dropout" = 1, "GED" = 2, "HS Diploma" = 3),
+    selected = NULL),
+  textOutput(outputId = "outcome")
+  
+)
+
+# insert plot
+plot_main <- mainPanel(
+  plotlyOutput(outputId = "chart1")
+)
+
+# layer of the tab
+chart1_tab <- tabPanel(
+  "Educational Outcome and Justice Involvement",
   sidebarLayout(
-    sidebarPanel(
-      p("Select your viewing options"),
-      selectInput("input_id",
-                  label = h3("Year"),
-                  choices = df$column,
-                  selected = "option"
-      ),
-      selectInput("color_id",
-                  label = h3("Color"),
-                  choices = brewer.pal(8, "Set2")
-      )
-    ),
-    
-    #Main panel where the chart + description are supposed to go.
-    
-    mainPanel(
-      h2("title of what chart 1 is doing"),
-      p("..."),
-      plotlyOutput(outputId = "output_id"),
-      p("some description")
-    )
+    plot_sidebar,
+    plot_main
+  ),
+  fluidPage(theme = bs_theme(bootswatch = "sketchy"),
+            p("We wanted to demonstrate the changes over time for the high school outcomes for different types of justice involvement.",
+              "These graphs show the percent for each high school outcome (GED, diploma, and dropout) for each type of justice involvement within different years.",
+              "It is pretty obvious that the most optismistic high school outcome shows on those students who are not justice involved: ",
+              "highest rate of HS Diploma and lowest rate of dropout.")
   )
 )
 
