@@ -78,29 +78,40 @@ Chart2 <- tabPanel(
 Chart3 <- tabPanel(
   "Chart 3",
   sidebarLayout(
-    sidebarPanel(
-      p("Select your viewing options!"),
-      selectInput("input id for ch3",
-                  label = h3("label"),
-                  choices = df$Col,
-                  selected = "option"
-      ),
-      selectInput("color_id3",
-                  label = h3("Color"),
-                  choices = brewer.pal(8, "Set2")
+    sidebarPanel( 
+selectInput(
+        inputId = "user_category",
+        label = "Select Demographic Group",
+        choices = pct_offenders$DemographicValue,
+        selected = "Asian",
+        multiple = TRUE),
+      
+      selectInput(
+        inputId = "user_category2",
+        label = "Select Year",
+        choices = pct_offenders$CohortYearTTL,
+        selected = "2013",
+        multiple = TRUE),
+      
+      selectInput("user_category3",
+                  label = h3("Offender Type"),
+                  choices = pct_offenders$JJOffenderType,
+                  selected = "Status Offender"
       )
-    ),
+    )
+      ),
     
     # Main panel where the chart + description are supposed to go.
-    
-    mainPanel(
-      h2("Chart 3 title"),
-      p("..."),
-      plotlyOutput(outputId = "outpit_id"),
-      p("...")
+mainPanel(
+      h2("High School outcomes per race"),
+      plotlyOutput(outputId = "chart3"),
+      p("This visualization demonstrates high school outcomes for different racial groups each year. We chose this chart to reveal how race and involvement with the criminal justice system might 
+  affect high school outcomes. The fact that there is little to no data on certain races for offender status 
+  rates might reveal how racial steoreotypes influence both high school outcomes and involvement with the criminal justice system.
+"),
+      
     )
   )
-)
 
 # Conclusion tab.
 

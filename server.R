@@ -6,6 +6,8 @@ library(plotly)
 
 #Heres where we load our data.
 
+project_data<-read.csv("https://raw.githubusercontent.com/info-201b-wi22/exploratory-analysis-sara-mustredr09/main/Juvenile_Justice_Dashboard_-_HS_Completion.csv?token=GHSAT0AAAAAABQIEWSA6BKJCPJ3VN3C5VHSYQYGLCA")
+
 #Chart 1 
 
 # Load chart 1 data.
@@ -28,11 +30,33 @@ return(chart2)
 
 # Load chart 3 data.
 
+categories<-c("American Indian or Alaska Native","Asian","Black or African American","Multiple Races (Details Unknown)","Native Hawaiian and Other Pacific Islander","Spanish/Hispanic/Latino","White")
+
+pct_offenders <-project_data%>%
+  filter(DemographicValue%in%categories)
+
+pct_offenders <-pct_offenders%>%
+  filter(DemographicValue%in%input$user_category)
+
+# Find  a way to pick by year.
+
+pct_offenders <-pct_offenders%>%
+  filter(CohortYearTTL%in%input$user_category2)
+
+pct_offenders <-pct_offenders%>%
+  filter(JJOffenderType%in%input$user_category3)
+
 # Make chart 3.
 
-ggplotly(chart3)
-return(chart3)
+chart3 <- ggplot(data = pct_offenders) +
+  geom_col(mapping = aes(x = HSOutcome, 
+                         y = Pct, 
+                         fill = DemographicValue), position="dodge")+
+  labs(title = "Outcomes per Racial Group", x = "Outcome", y = "Percentage")
 
+# Make interactive plot
+my_plotly_plot <- ggplotly(chart3) 
+return(my_plotly_plot)
 
 #Server function!
 
@@ -59,14 +83,35 @@ server <- function(input, output) {
            x = "x-axis-name", y = "y-axis-name")
   })
   
-  output$total_num_fires<- renderPlotly ({
-    chart3data <- main_dataframe %>%
-      filter(Name3 == input$column_id)
+#Chart 3 output
+  
+  output$chart3 <- renderPlotly({
     
-    chart3 <- ggplot(data = total_num_fires_updated) +
-      geom_col(mapping = aes(x = ArchiveYear, y = total_num_per_year),
-               fill = input$color_id3) +
-      labs(title = "Description of chart 3", 
-           x = "x-axis-name", y = "y-axis-name")
+    categories<-c("American Indian or Alaska Native","Asian","Black or African American","Multiple Races (Details Unknown)","Native Hawaiian and Other Pacific Islander","Spanish/Hispanic/Latino","White")
+    
+    pct_offenders <-project_data%>%
+      filter(DemographicValue%in%categories)
+    
+    pct_offenders <-pct_offenders%>%
+      filter(DemographicValue%in%input$user_category)
+    
+    # Find  a way to pick by year.
+    
+    pct_offenders <-pct_offenders%>%
+      filter(CohortYearTTL%in%input$user_category2)
+    
+    pct_offenders <-pct_offenders%>%
+      filter(JJOffenderType%in%input$user_category3)
+    
+    # Make a scatter plot
+    chart3 <- ggplot(data = pct_offenders) +
+      geom_col(mapping = aes(x = HSOutcome, 
+                             y = Pct, 
+                             fill = DemographicValue), position="dodge")+
+      labs(title = "Outcomes per Racial Group", x = "Outcome", y = "Percentage")
+    
+    # Make interactive plot
+    my_plotly_plot <- ggplotly(chart3) 
+    return(my_plotly_plot)
   })
 }
