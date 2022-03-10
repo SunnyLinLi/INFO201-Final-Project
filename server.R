@@ -49,46 +49,35 @@ avg_pct_offenders <- project_data %>%
   # })
 
 
-# Chart 2 
+# SUMMARY VALUES----------------------------------------
 
-# Load chart 2 data.
+# Proportion of not justice involved w/HS Diploma
+all_justice_not_in <- project_data %>% filter(JJOffenderType == 'Not Justice Involved') %>% 
+  count()
 
-# Make chart 2.
+HS_Diploma_nojustice <- project_data %>% filter(JJOffenderType == 'Not Justice Involved') %>% 
+  filter(HSOutcome == 'HS Diploma') %>% count()
 
-# ggplotly(chart2)
-# return(chart2)
+prop_HSdiploma_nojustice <- HS_Diploma_nojustice / all_justice_not_in
 
-#Chart 3
 
-# Load chart 3 data.
+# Proportion of dropouts w/justice involvement
+all_justice_in <- project_data %>% filter(JJOffenderType != 'Not Justice Involved') %>% 
+  count()
 
-# categories<-c("American Indian or Alaska Native","Asian","Black or African American","Multiple Races (Details Unknown)","Native Hawaiian and Other Pacific Islander","Spanish/Hispanic/Latino","White")
-# 
-# pct_offenders <-project_data%>%
-#   filter(DemographicValue%in%categories)
-# 
-# pct_offenders <-pct_offenders%>%
-#   filter(DemographicValue%in%input$user_category)
-# 
-# # Find  a way to pick by year.
-# 
-# pct_offenders <-pct_offenders%>%
-#   filter(CohortYearTTL%in%input$user_category2)
-# 
-# pct_offenders <-pct_offenders%>%
-#   filter(JJOffenderType%in%input$user_category3)
-# 
-# # Make chart 3.
-# 
-# chart3 <- ggplot(data = pct_offenders) +
-#   geom_col(mapping = aes(x = HSOutcome, 
-#                          y = Pct, 
-#                          fill = DemographicValue), position="dodge")+
-#   labs(title = "Outcomes per Racial Group", x = "Outcome", y = "Percentage")
-# 
-# # Make interactive plot
-# my_plotly_plot <- ggplotly(chart3) 
-# return(my_plotly_plot)
+dropouts_w_justice <- project_data %>% filter(JJOffenderType != 'Not Justice Involved') %>% 
+  filter(HSOutcome == 'Dropout') %>% count()
+
+prop_dropouts_justice_in <- dropouts_w_justice / all_justice_in
+
+
+# Percent Asians with a high school diploma
+# pct_hs_dip<-project_data %>% 
+#   group_by(DemographicValue) %>% 
+#   filter(HSOutcome == 'HS Diploma') %>%
+#   summarize(pct_inv = mean(Pct, na.rm = TRUE)) %>% 
+#   pull(DemographicValue == Asian)
+
 
 #Server function!
 
@@ -130,15 +119,12 @@ server <- function(input, output) {
     
     pct_graduated <- project_data %>% 
       filter(HSOutcome == input$outcome_id) %>% 
-      filter(JJOffenderType == input$offender_id)
+      filter(JJOffenderType == input$offender_id) %>%
+      filter(DemographicValue == input$demo_id)
     
-    p1 <- ggplot(data = pct_graduated) + geom_line(mapping = aes(y = Pct, x = CohortYearTTL, 
-                                                                 color = DemographicValue))
-    
-    
-    p1
-    p1 + labs(title = "High School Outcome by Demographic", x = "Year", y = "Percent With Diploma", 
-              caption = "Data: data.wa.gov")
+    p1 <- ggplot(data = pct_graduated) + 
+      geom_line(mapping = aes(y = Pct, x = CohortYearTTL, color = DemographicValue)) + 
+      labs(title = "High School Outcome by Demographic", x = "Year", y = "Percent With Diploma", caption = "Data: data.wa.gov")
     
     my_plotly_plot <- ggplotly(p1) 
     return(my_plotly_plot)
@@ -175,4 +161,21 @@ server <- function(input, output) {
     my_plotly_plot <- ggplotly(chart3) 
     return(my_plotly_plot)
   })
+  
+  output$SummaryValues <- renderText({
+    paste0("In the analysis, there is not a big difference among the different demographic groups in 
+           percentage of justice involved and justice not involved. And the proportion ", prop_HSdiploma_nojustice, 
+           " (about 0.33) of not justice involved with HS Diploma (a supposed positive outcome) and the 
+           proportion ", prop_dropouts_justice_in, "(about 0.33) of justice involved with dropouts are exactly 
+           the same. As for the data of justice involvement, the only obvious difference is that Native 
+           Hawaiian and Other Pacific Islander have a higher percent of 
+           justice involvement (about 0.41). And in their academic outcomes, they have a relatively high 
+           percent of HS Diploma and a relatively low percent of dropouts (but not the extremes). 
+           Moreover, is noticeable that Asian show the best behavior in the result of HS Diploma, which 
+           is a percentage of (about 0.76), while they also have the lowest percent 
+           of dropouts (about 0.2). However, like what it is stated above, we 
+           can not see there is a huge difference in the justice involvement than the other demographic 
+           groups. Thus, it is reasonable to speculate that their academic outcome might also be influenced 
+           by other elements.")
+})
 }
