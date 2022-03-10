@@ -125,6 +125,25 @@ server <- function(input, output) {
     }
   })
   
+# Chart 2 output
+  output$chart2 <- renderPlotly({
+    
+    pct_graduated <- project_data %>% 
+      filter(HSOutcome == input$outcome_id) %>% 
+      filter(JJOffenderType == input$offender_id)
+    
+    p1 <- ggplot(data = pct_graduated) + geom_line(mapping = aes(y = Pct, x = CohortYearTTL, 
+                                                                 color = DemographicValue))
+    
+    
+    p1
+    p1 + labs(title = "High School Outcome by Demographic", x = "Year", y = "Percent With Diploma", 
+              caption = "Data: data.wa.gov")
+    
+    my_plotly_plot <- ggplotly(p1) 
+    return(my_plotly_plot)
+  })
+  
 #Chart 3 output
   
   output$chart3 <- renderPlotly({

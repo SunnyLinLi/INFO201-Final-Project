@@ -52,7 +52,37 @@ intro_tab <- tabPanel(
 #   )
 # ))
 #
-# # Chart 3.
+# Chart 2
+plot2_tab <- tabPanel(
+  "Chart 2",
+  
+  #This is the sidebar.
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("outcome_id",
+                  label = "Choose High School Outcome",
+                  choices = project_data$HSOutcome,
+                  selected = "HS Diploma",
+                  multiple = FALSE
+      ),
+      selectInput("offender_id",
+                  label = "Choose Offender Type",
+                  choices = project_data$JJOffenderType,
+                  selected = "Not Justice Involved",
+                  multiple = FALSE
+      )
+    ),
+    
+    #Main panel where the chart + description are supposed to go.
+    mainPanel(
+      p("Description"),
+      plotlyOutput(outputId = "chart2"),
+      p("...")
+    )
+  )
+)
+
+# Chart 3.
 #
 plot3_tab <- tabPanel(
   "Chart 3",
@@ -104,7 +134,7 @@ ui <- navbarPage(
   "General page title",
   intro_tab,
   # plot1_tab,
-  # plot2_tab,
+  plot2_tab,
   plot3_tab,
   conclusion_tab
 )
