@@ -18,18 +18,12 @@ avg_pct_offenders <- project_data %>%
   filter(CohortYearTTL > 2015) %>% 
   rename("Percent_of_Cohort" = "Pct") %>% 
   rename("Justice_Involvement" = "JJOffenderType")
-
-
-server <- function(input, output) {
-  
-  output$chart1 <- renderPlotly({
-    
     # dataset for chart
     chart1_plot <- avg_pct_offenders %>% 
       filter(Justice_Involvement %in% input$user_justice_choice)
     
     # make plot
-    plot <- ggplot(data = chart1_plot) +
+plot <- ggplot(data = chart1_plot) +
       geom_col(
         mapping = aes(x = Justice_Involvement, y = Percent_of_Cohort, fill = HSOutcome), position = "dodge"
       ) + scale_y_continuous(breaks = seq(0, .83, .1)) + facet_wrap(~CohortYearTTL) +
@@ -40,7 +34,6 @@ server <- function(input, output) {
     
     plotly_plot1 <- ggplotly(plot)
     return(plotly_plot1)
-  })
   
   output$outcome <- renderText({
     if(input$user_explain == 1){
@@ -53,7 +46,6 @@ server <- function(input, output) {
       return("OSPI P210 indicates the student graduated.")
     }
   })
-}
 
 
 # Chart 2 
@@ -100,26 +92,36 @@ return(my_plotly_plot)
 #Server function!
 
 server <- function(input, output) {
-  output$column <- renderPlotly({
-    fires_per_month_updated <- fires_per_month %>%
-      filter(Name1 == input$column_id)
+  output$chart1 <- renderPlotly({
     
-    chart1 <- ggplot(data = dataframe1) +
-      geom_col(mapping = aes(x = x_axis, y = y_axis),
-               fill = input$color_id) +
-      labs(title = "Description of chart 1", 
-           x = "x-axis-name", y = "y-axis-name")
+    # dataset for chart
+    chart1_plot <- avg_pct_offenders %>% 
+      filter(Justice_Involvement %in% input$user_justice_choice)
+    
+    # make plot
+    plot <- ggplot(data = chart1_plot) +
+      geom_col(
+        mapping = aes(x = Justice_Involvement, y = Percent_of_Cohort, fill = HSOutcome), position = "dodge"
+      ) + scale_y_continuous(breaks = seq(0, .83, .1)) + facet_wrap(~CohortYearTTL) +
+      labs(title = "High School Outcomes for Each Offender Type",
+           x = "Justice Involvement Type",
+           y = "Percent of Cohort",
+           color = "High School Outcomes")
+    
+    plotly_plot1 <- ggplotly(plot)
+    return(plotly_plot1)
   })
   
-  output$column <- renderPlotly ({
-    chart2data <- main_dataframe %>%
-      filter(Name2 == input$column_id)
-    
-    chart2 <- ggplot(data = dataframe2) +
-      geom_line(mapping = aes(x = x_axis, y = y_axis),
-                color = input$color_id2) +
-      labs(title = "Description of chart 2", 
-           x = "x-axis-name", y = "y-axis-name")
+  output$outcome <- renderText({
+    if(input$user_explain == 1){
+      return(" If a student does not have a graduation record or a GED record, 
+             they are considered to be a dropout.")
+    } else if (input$user_explain == 2) {
+      return(" If the student does not have a graduation record, 
+             the OSPI P210 and SBCTC Completion records are queried to determine if the student has completed a GED.")
+    } else {
+      return("OSPI P210 indicates the student graduated.")
+    }
   })
   
 #Chart 3 output

@@ -8,16 +8,20 @@ library(bslib)
 
 intro_tab <- tabPanel(
   "Introduction",
-  fluidPage(theme = bs_theme(bootswatch = "solar"),
+  fluidPage(theme = bs_theme(bootswatch = "sketchy"),
             p("Here is the intro text.")
   )
 )
 
 #Chart1 Page
 
-# small widges
-plot_sidebar <- sidebarPanel(
-  selectInput(
+# small widgets
+
+plot1_tab <- tabPanel(
+  "Educational Outcome and Justice Involvement",
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
     inputId = "user_justice_choice",
     label = h3("Select an Offender Type"),
     choices = avg_pct_offenders$Justice_Involvement,
@@ -31,11 +35,16 @@ plot_sidebar <- sidebarPanel(
     selected = NULL),
   textOutput(outputId = "outcome")
   
-)
+  )
+ ),
 
-# insert plot
-plot_main <- mainPanel(
-  plotlyOutput(outputId = "chart1")
+mainPanel(
+  plotlyOutput(outputId = "chart1"),
+  p("We wanted to demonstrate the changes over time for the high school outcomes for different types of justice involvement.",
+    "These graphs show the percent for each high school outcome (GED, diploma, and dropout) for each type of justice involvement within different years.",
+    "It is pretty obvious that the most optismistic high school outcome shows on those students who are not justice involved: ",
+    "highest rate of HS Diploma and lowest rate of dropout."),
+ )
 )
 
 # layer of the tab
@@ -55,7 +64,7 @@ chart1_tab <- tabPanel(
 
 #Chart 2 Page
 
-Chart2 <- tabPanel(
+plot2_tab <- tabPanel(
   "Chart 2",
   
   #This is the sidebar.
@@ -83,9 +92,14 @@ Chart2 <- tabPanel(
   )
 )
 
+p("We wanted to demonstrate the changes over time for the high school outcomes for different types of justice involvement.",
+  "These graphs show the percent for each high school outcome (GED, diploma, and dropout) for each type of justice involvement within different years.",
+  "It is pretty obvious that the most optismistic high school outcome shows on those students who are not justice involved: ",
+  "highest rate of HS Diploma and lowest rate of dropout.")
+
 # Chart 3.
 
-Chart3 <- tabPanel(
+plot3_tab <- tabPanel(
   "Chart 3",
   sidebarLayout(
     sidebarPanel( 
