@@ -37,42 +37,44 @@ intro_tab <- tabPanel(
 
 #Chart1 Page
 
-# small widgets
+# small widges
+plot_sidebar <- sidebarPanel(
+  selectInput(
+    inputId = "user_justice_choice",
+    label = h3("Select an Offender Type"),
+    choices = avg_pct_offenders$Justice_Involvement,
+    selected = "Justice Involved",
+    multiple = TRUE),
+  
+  radioButtons(
+    inputId = "user_explain",
+    label = h5("See the Metric explanation of High School Outcomes (HSOutcome):"),
+    choices = list("Dropout" = 1, "GED" = 2, "HS Diploma" = 3),
+    selected = NULL),
+  textOutput(outputId = "outcome")
+  
+)
 
-# plot1_tab <- tabPanel(
-#   "Educational Outcome and Justice Involvement",
-#   fluidPage(theme = bs_theme(bootswatch = "sketchy"),
-#   sidebarLayout(
-#     sidebarPanel(
-#       selectInput(
-#         inputId = "user_justice_choice",
-#         label = h3("Select an Offender Type"),
-#         choices = avg_pct_offenders$Justice_Involvement,
-#         selected = "Justice Involved",
-#         multiple = TRUE),
-# 
-#       radioButtons(
-#         inputId = "user_explain",
-#         label = h5("See the Metric explanation of High School Outcomes (HSOutcome):"),
-#         choices = list("Dropout" = 1, "GED" = 2, "HS Diploma" = 3),
-#         selected = 1),
-#       textOutput(outputId = "outcome")
-#     ),
-#     mainPanel(
-#       plotlyOutput(outputId = "chart1"),
-#       p("We wanted to demonstrate the changes over time for the high school outcomes for different types of justice involvement.",
-#         "These graphs show the percent for each high school outcome (GED, diploma, and dropout) for each type of justice involvement within different years.",
-#         "It is pretty obvious that the most optismistic high school outcome shows on those students who are not justice involved: ",
-#         "highest rate of HS Diploma and lowest rate of dropout.")
-#     ),
-#     p("We wanted to demonstrate the changes over time for the high school outcomes for different types of justice involvement.",
-#                 "These graphs show the percent for each high school outcome (GED, diploma, and dropout) for each type of justice involvement within different years.",
-#                 "It is pretty obvious that the most optismistic high school outcome shows on those students who are not justice involved: ",
-#                 "highest rate of HS Diploma and lowest rate of dropout.")
-# 
-#   )
-# ))
-#
+# insert plot
+plot_main <- mainPanel(
+  plotlyOutput(outputId = "chart1")
+)
+
+# layer of the tab
+plot1_tab <- tabPanel(
+  "Educational Outcome and Justice Involvement",
+  sidebarLayout(
+    plot_sidebar,
+    plot_main
+  ),
+  fluidPage(theme = bs_theme(bootswatch = "sketchy"),
+            p("We wanted to demonstrate the changes over time for the high school outcomes for different types of justice involvement.",
+              "These graphs show the percent for each high school outcome (GED, diploma, and dropout) for each type of justice involvement within different years.",
+              "It is pretty obvious that the most optismistic high school outcome shows on those students who are not justice involved: ",
+              "highest rate of HS Diploma and lowest rate of dropout.")
+  )
+)
+
 # Chart 2
 plot2_tab <- tabPanel(
   "Chart 2",
@@ -160,7 +162,7 @@ conclusion_tab <- tabPanel(
 ui <- navbarPage(
   "General page title",
   intro_tab,
-  # plot1_tab,
+  plot1_tab,
   plot2_tab,
   plot3_tab,
   conclusion_tab
