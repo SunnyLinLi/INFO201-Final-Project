@@ -77,7 +77,7 @@ plot1_tab <- tabPanel(
 
 # Chart 2
 plot2_tab <- tabPanel(
-  "Chart 2",
+  "High School Outcome by Demographic",
   
   #This is the sidebar.
   sidebarLayout(
@@ -114,7 +114,7 @@ plot2_tab <- tabPanel(
 # Chart 3.
 #
 plot3_tab <- tabPanel(
-  "Chart 3",
+  "Rate of Dropouts for Different Offender Type",
   sidebarLayout(
     sidebarPanel(
       selectInput(
@@ -160,7 +160,7 @@ conclusion_tab <- tabPanel(
 )
 
 ui <- navbarPage(
-  "General page title",
+  "Educational Outcomes by Race and Criminal Justice Involvement",
   intro_tab,
   plot1_tab,
   plot2_tab,

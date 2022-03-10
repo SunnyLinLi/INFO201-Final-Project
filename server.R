@@ -1,14 +1,12 @@
 library(tidyverse)
 library(shiny)
-# library(lintr)
-# library(styler)
 library(plotly)
 library(ggplot2)
 
 #Heres where we load our data.
 
 project_data<-read.csv("https://raw.githubusercontent.com/info-201b-wi22/exploratory-analysis-sara-mustredr09/main/Juvenile_Justice_Dashboard_-_HS_Completion.csv?token=GHSAT0AAAAAABQIEWSA6BKJCPJ3VN3C5VHSYQYGLCA")
-
+avg_pct_offenders<-read.csv("https://raw.githubusercontent.com/info-201b-wi22/final-project-group6-be/main/avg_pct_offenders.csv")
 #Chart 1 
 
 
@@ -127,20 +125,10 @@ server <- function(input, output) {
   })
   
   output$SummaryValues <- renderText({
-    paste0("In the analysis, there is not a big difference among the different demographic groups in 
-           percentage of justice involved and justice not involved. And the proportion ", prop_HSdiploma_nojustice, 
-           " (about 0.33) of not justice involved with HS Diploma (a supposed positive outcome) and the 
-           proportion ", prop_dropouts_justice_in, "(about 0.33) of justice involved with dropouts are exactly 
-           the same. As for the data of justice involvement, the only obvious difference is that Native 
-           Hawaiian and Other Pacific Islander have a higher percent of 
-           justice involvement (about 0.41). And in their academic outcomes, they have a relatively high 
-           percent of HS Diploma and a relatively low percent of dropouts (but not the extremes). 
-           Moreover, is noticeable that Asian show the best behavior in the result of HS Diploma, which 
-           is a percentage of (about 0.76), while they also have the lowest percent 
-           of dropouts (about 0.2). However, like what it is stated above, we 
-           can not see there is a huge difference in the justice involvement than the other demographic 
-           groups. Thus, it is reasonable to speculate that their academic outcome might also be influenced 
-           by other elements.")
+    paste0("In the analysis, there is not a big difference among the different demographic groups in percentage of justice involved and justice not involved. And the proportion 0.333333333333333 (about 0.33) of not justice involved with HS Diploma (a supposed positive outcome) and the proportion 0.333333333333333(about 0.33) of justice involved with dropouts are exactly the same. As for the data of justice involvement, the only obvious difference is that Native Hawaiian and Other Pacific Islander have a higher percent of justice involvement (about 0.41). And in their academic outcomes, they have a relatively high percent of HS Diploma and a relatively low percent of dropouts (but not the extremes). Moreover, is noticeable that Asians have higher percentages of HS Diplomas, which is a percentage of (about 0.76), while they also have the lowest percent of dropouts (about 0.2). 
+
+
+However, like what it is stated above, it is reasonable to speculate that their academic outcome might also be influenced by other elements, such as race and ethnicity. This can explain the influence of the school-to-prison pipeline, which is a “growing pattern of tracking students out of educational institutions, primarily via ―zero tolerance policies, and tracking them directly and/or indirectly into the juvenile and adult criminal justice systems.” The school-to-prison pipeline disproportionately affects Black and brown students the most, given stereotypes about their behavior. Therefore, they are punished more harshly than their white and Asian counterparts. ")
 })
 }
 
